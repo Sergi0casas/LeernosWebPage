@@ -1,0 +1,36 @@
+/* Restablece los estilos por defecto del navegador para un mejor control */
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424; /* Puedes cambiar este color de fondo base */
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Asegura que el cuerpo ocupe toda la pantalla sin márgenes */
+body {
+  margin: 0;
+  padding: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+/* --- ESTA ES LA PARTE MÁS IMPORTANTE --- */
+/* Le decimos al contenedor principal de React que ocupe todo el ancho */
+#root {
+  width: 100%;
+  /* Eliminamos cualquier estilo de centrado que pudiera tener */
+}
+
+/* Opcional: Un estilo base para los títulos */
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
