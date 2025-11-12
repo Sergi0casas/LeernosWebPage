@@ -54,7 +54,7 @@ const CourseDetailsPage = () => {
     position: 'relative',
     overflow: 'hidden',
     // --- CAMBIO: El fondo ahora es un degradado radial dinámico ---
-    background: `radial-gradient(circle 800px at ${mousePosition.x}px ${mousePosition.y}px, #d4e2ff, #b8caff)`,
+  background: `radial-gradient(circle 600px at ${mousePosition.x}px ${mousePosition.y}px, rgba(0, 86, 210, 0.15), transparent 80%), #000000`,
   };
 
   const contentWrapperStyle = { position: 'relative', zIndex: 1, padding: '40px 20px', maxWidth: '1200px', margin: '0 auto' };

@@ -12,11 +12,13 @@ import SignUpProfessor from './pages/SignUpProfessor';
 import StudentSchedule from './pages/StudentSchedule';
 import ProfessorSchedule from './pages/ProfessorSchedule';
 import CourseDetailsPage from './pages/CourseDetailsPage';
+import RegistrationPage from './pages/RegistrationPage';
+import ForgotPassword from './pages/ForgotPassword';
 
 function App() {
   return (
     <div>
-      <HomePage/> {/* <-- 2. Renderiza la página de inicio */}
+      <SignUp/> {/* <-- 2. Renderiza la página de inicio */}
     </div>
   );
 }
