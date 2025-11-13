@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 // El componente ahora recibe props con la información del usuario
-const SignUpProfessor = ({ fullName, email }) => {
+const SignUpProfessor = ({ fullName, email, institution, teachingTime, timePeriod, onComplete }) => {
   // Ya no necesitamos los estados para nombre, email o contraseña
   const [idFile, setIdFile] = useState(null);
   const [certificateFile, setCertificateFile] = useState(null);
@@ -15,15 +15,22 @@ const SignUpProfessor = ({ fullName, email }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Usamos los props `fullName` y `email` directamente
+    // Usamos los props directamente
     const formData = {
       fullName, // Viene de props
       email,    // Viene de props
+      institution, // Viene de props
+      teachingTime, // Viene de props
+      timePeriod, // Viene de props
       idFile: idFile ? idFile.name : 'No subido',
       certificateFile: certificateFile ? certificateFile.name : 'No subido',
     };
     console.log('Datos del profesor:', formData);
-    alert(`Solicitud de ${fullName} enviada. Se revisarán los documentos.`);
+    
+    // Llamar a la función onComplete para completar el registro
+    if (onComplete) {
+      onComplete();
+    }
   };
 
   // --- ESTILOS --- (Sin cambios)
@@ -39,24 +46,27 @@ const SignUpProfessor = ({ fullName, email }) => {
   const formContainerStyle = {
     backgroundColor: '#ffffff', padding: '40px', borderRadius: '10px',
     boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)', width: '100%', maxWidth: '450px',
-    zIndex: 1, position: 'relative', textAlign: 'center',
+    zIndex: 1, position: 'relative', textAlign: 'center', colorScheme: 'light',
   };
   const logoStyle = { fontFamily: "'Pacifico', cursive", fontSize: '3.5rem', color: '#0056d2', marginBottom: '10px' };
   const welcomeTitleStyle = { color: '#333', marginBottom: '5px' };
   const welcomeEmailStyle = { color: '#777', marginTop: '0', fontSize: '0.9rem', marginBottom: '25px' };
   const labelStyle = { display: 'block', textAlign: 'left', fontSize: '0.9rem', color: '#333', fontWeight: '600', marginBottom: '5px', marginLeft: '5px' };
-  const fileInputStyle = { width: '100%', padding: '12px', marginBottom: '15px', border: '1px solid #ccc', borderRadius: '5px', fontSize: '1rem', boxSizing: 'border-box', backgroundColor: '#f9f9f9', cursor: 'pointer' };
+  const fileInputStyle = { width: '100%', padding: '12px', marginBottom: '15px', border: '1px solid #ccc', borderRadius: '5px', fontSize: '1rem', boxSizing: 'border-box', backgroundColor: '#f9f9f9', cursor: 'pointer', color: '#333' };
   const submitButtonStyle = { width: '100%', padding: '15px', backgroundColor: '#0056d2', color: 'white', border: 'none', borderRadius: '5px', fontSize: '1.1rem', fontWeight: 'bold', cursor: 'pointer', marginTop: '20px' };
 
   return (
     <div style={backgroundStyle}>
       <div style={overlayStyle}></div>
-      <div style={formContainerStyle}>
+      <div style={formContainerStyle} data-color-scheme="light">
         <div style={logoStyle}>Leernos</div>
         
         {/* Mensaje de bienvenida con los datos recibidos */}
         <h3 style={welcomeTitleStyle}>¡Hola, {fullName}!</h3>
-        <p style={welcomeEmailStyle}>Solo un paso más para completar tu registro como profesor.</p>
+        <p style={welcomeEmailStyle}>
+          {institution} • {teachingTime} {timePeriod === 'months' ? (teachingTime === '1' ? 'mes' : 'meses') : (teachingTime === '1' ? 'año' : 'años')} de experiencia
+        </p>
+        <p style={{...welcomeEmailStyle, marginTop: '-15px'}}>Solo un paso más para completar tu registro como profesor.</p>
 
         <form onSubmit={handleSubmit}>
           {/* SE ELIMINARON LOS CAMPOS DE NOMBRE, CORREO Y CONTRASEÑA */}

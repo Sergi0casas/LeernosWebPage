@@ -34,3 +34,12 @@ h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
+
+/* Forzar modo claro en los formularios de SignUp */
+[data-color-scheme="light"] {
+  color-scheme: light !important;
+}
+
+[data-color-scheme="light"] * {
+  color-scheme: light;
+}

@@ -1,11 +1,9 @@
-
 import React from 'react';
-// En: src/pages/HomePage.jsx
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
 
-
-
-import  HomePage  from './pages/HomePage';// <-- ¡Añade las llaves!
-// Si tienes estilos globales, mantenlos
+// Importar todas las páginas
+import HomePage from './pages/HomePage';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import SignUpProfessor from './pages/SignUpProfessor';
@@ -17,9 +15,35 @@ import ForgotPassword from './pages/ForgotPassword';
 
 function App() {
   return (
-    <div>
-      <SignUp/> {/* <-- 2. Renderiza la página de inicio */}
-    </div>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+        {/* Ruta principal - HomePage */}
+        <Route path="/" element={<HomePage />} />
+        
+        {/* Rutas de autenticación */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/registro" element={<RegistrationPage />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        
+        {/* Rutas de cursos */}
+        <Route path="/course/:id" element={<CourseDetailsPage />} />
+        
+        {/* Rutas de horarios */}
+        <Route path="/student-schedule" element={<StudentSchedule />} />
+        <Route path="/professor-schedule" element={<ProfessorSchedule />} />
+        
+        {/* Ruta 404 - Si no existe la ruta */}
+        <Route path="*" element={
+          <div style={{ padding: '50px', textAlign: 'center' }}>
+            <h1>404 - Página no encontrada</h1>
+            <p>La página que buscas no existe.</p>
+            <a href="/" style={{ color: '#0056d2' }}>Volver al inicio</a>
+          </div>
+        } />
+      </Routes>
+    </BrowserRouter>
+    </AuthProvider>
   );
 }
 

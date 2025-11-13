@@ -1,4 +1,8 @@
 import React from 'react';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 // --- DATOS DE EJEMPLO PARA EL PROFESOR ---
 // En una aplicación real, estos datos vendrían de tu backend.
@@ -26,13 +30,30 @@ const professorClasses = [
 ];
 
 const ProfessorSchedule = () => {
+  const { user, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirigir si no está autenticado
+  React.useEffect(() => {
+    if (!isAuthenticated()) {
+      alert('Por favor, inicia sesión para ver tu horario');
+      navigate('/login');
+    }
+  }, [isAuthenticated, navigate]);
+
+  // Si no hay usuario, no renderizar nada (mientras redirige)
+  if (!user) {
+    return null;
+  }
+
   // --- ESTILOS --- (similares a la vista del estudiante para consistencia)
 
   const pageStyle = {
     fontFamily: 'Arial, sans-serif',
     backgroundColor: '#f4f7f9',
     minHeight: '100vh',
-    padding: '40px',
+    padding: '0',
+    colorScheme: 'light',
   };
 
   const headerStyle = {
@@ -121,12 +142,17 @@ const ProfessorSchedule = () => {
   };
 
   return (
-    <div style={pageStyle}>
-      <header style={headerStyle}>
-        <h1 style={titleStyle}>🧑‍🏫 Mis Clases Programadas</h1>
-      </header>
-      
-      <div style={scheduleContainerStyle}>
+    <div style={pageStyle} data-color-scheme="light">
+      <Header />
+      <div style={{ padding: '40px' }}>
+        <header style={headerStyle}>
+          <h1 style={titleStyle}>🧑‍🏫 Horario del Profesor {user.fullName}</h1>
+          <p style={{ color: '#666', fontSize: '1.1rem' }}>
+            {user.institution} • {user.teachingTime} {user.timePeriod === 'months' ? 'meses' : 'años'} de experiencia
+          </p>
+        </header>
+        
+        <div style={scheduleContainerStyle}>
         {professorClasses.map(cls => (
           <div 
             key={cls.id} 
@@ -159,7 +185,9 @@ const ProfessorSchedule = () => {
         {professorClasses.length === 0 && (
             <p style={{textAlign: 'center', color: '#777'}}>No tienes clases programadas.</p>
         )}
+        </div>
       </div>
+      <Footer />
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-// La importación de 'Link' se ha eliminado
+import { Link } from 'react-router-dom';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -104,10 +104,9 @@ const ForgotPassword = () => {
           </button>
         </form>
 
-        {/* --- CAMBIO: Se reemplaza <Link> por <a> --- */}
-        <a href="/login" style={backLinkStyle}>
+        <Link to="/login" style={backLinkStyle}>
           &larr; Volver a Iniciar Sesión
-        </a>
+        </Link>
       </div>
     </div>
   );
