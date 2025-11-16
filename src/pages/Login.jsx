@@ -1,15 +1,32 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isButtonHovered, setIsButtonHovered] = useState(false);
+  const { register } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Correo:', email, 'Contraseña:', password);
-    alert('Intento de login con: ' + email + ' y ' + password);
+    
+    // Crear un usuario estudiante automáticamente con el email proporcionado
+    const studentData = {
+      fullName: email.split('@')[0] || 'Estudiante', // Usa el nombre del email como nombre
+      email: email,
+      role: 'student',
+    };
+    
+    // Registrar al usuario como estudiante
+    register(studentData);
+    
+    // Mostrar mensaje de bienvenida
+    alert(`¡Bienvenido! Has iniciado sesión como estudiante.`);
+    
+    // Redirigir a la página principal
+    navigate('/');
   };
 
   // --- Estilos Responsive ---
@@ -75,10 +92,10 @@ const Login = () => {
     <div style={backgroundStyle}>
       <div style={formContainerStyle}>
         <div style={logoStyle}>Leernos</div>
-        <p style={subtitleStyle}>Ingresa tus credenciales para continuar</p>
+        <p style={subtitleStyle}>Ingresa cualquier correo para acceder como estudiante</p>
         <form onSubmit={handleSubmit}>
           <input type="email" placeholder="Correo Electrónico" value={email} onChange={(e) => setEmail(e.target.value)} style={inputStyle} required />
-          <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} style={inputStyle} required />
+          <input type="password" placeholder="Contraseña (cualquiera)" value={password} onChange={(e) => setPassword(e.target.value)} style={inputStyle} required />
           
           <button
             type="submit"

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // Importa los componentes reutilizables (asumiendo que existen)
 import Header from "../components/Header";
@@ -222,22 +222,11 @@ const CourseCard = ({ course }) => {
 
 // --- COMPONENTE PARA LA TARJETA DE TUTOR ---
 const TutorCard = ({ tutor }) => {
+  const navigate = useNavigate();
+  
   const handleScheduleClick = () => {
-    const classesText = tutor.classes.join('\n• ');
-    const message = `
-📚 CLASES QUE IMPARTE ${tutor.name}:
-
-• ${classesText}
-
-💰 Precio: $${tutor.pricePerHour.toLocaleString('es-CO')} COP/hora
-
-📅 Disponibilidad:
-${tutor.availability}
-
-¿Deseas programar una clase de prueba?
-    `.trim();
-    
-    alert(message);
+    // Navegar al perfil del tutor
+    navigate(`/tutor/${tutor.id}`);
   };
 
   const cardStyle = { 

@@ -13,6 +13,7 @@ import CourseDetailsPage from './pages/CourseDetailsPage';
 import RegistrationPage from './pages/RegistrationPage';
 import ForgotPassword from './pages/ForgotPassword';
 import CreateCourse from './pages/CreateCourse';
+import TutorProfile from './pages/TutorProfile';
 
 function App() {
   return (
@@ -30,6 +31,9 @@ function App() {
         {/* Rutas de cursos */}
         <Route path="/course/:id" element={<CourseDetailsPage />} />
         <Route path="/create-course" element={<CreateCourse />} />
+        
+        {/* Rutas de tutores */}
+        <Route path="/tutor/:id" element={<TutorProfile />} />
         
         {/* Rutas de horarios */}
         <Route path="/student-schedule" element={<StudentSchedule />} />
