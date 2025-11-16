@@ -88,6 +88,41 @@ const Login = () => {
     textDecoration: 'none',
   };
 
+  const buttonsContainerStyle = {
+    display: 'flex',
+    gap: '10px',
+    marginTop: '25px',
+    flexWrap: 'wrap',
+  };
+
+  const secondaryButtonStyle = {
+    flex: '1 1 calc(50% - 5px)',
+    minWidth: '120px',
+    padding: 'clamp(10px, 2vw, 12px)',
+    borderRadius: '8px',
+    fontSize: 'clamp(0.85rem, 1.8vw, 0.9rem)',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    textDecoration: 'none',
+    textAlign: 'center',
+    display: 'inline-block',
+  };
+
+  const registerButtonStyle = {
+    ...secondaryButtonStyle,
+    backgroundColor: 'rgba(0, 86, 210, 0.2)',
+    color: '#00aaff',
+    border: '1px solid rgba(0, 170, 255, 0.3)',
+  };
+
+  const homeButtonStyle = {
+    ...secondaryButtonStyle,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    color: '#E0E0E0',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+  };
+
   return (
     <div style={backgroundStyle}>
       <div style={formContainerStyle}>
@@ -112,6 +147,38 @@ const Login = () => {
         <Link to="/forgot-password" style={forgotPasswordLinkStyle}>
           ¿Olvidaste tu contraseña?
         </Link>
+
+        {/* Botones adicionales */}
+        <div style={buttonsContainerStyle}>
+          <Link 
+            to="/registro" 
+            style={registerButtonStyle}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(0, 86, 210, 0.3)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(0, 86, 210, 0.2)';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
+          >
+            📝 Registrarse
+          </Link>
+          <Link 
+            to="/" 
+            style={homeButtonStyle}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
+          >
+            🏠 Volver al Inicio
+          </Link>
+        </div>
       </div>
     </div>
   );

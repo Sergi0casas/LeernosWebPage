@@ -294,6 +294,7 @@ const TutorProfile = () => {
   const heroStyle = {
     background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     padding: 'clamp(40px, 8vw, 60px) clamp(20px, 4vw, 40px)',
+    paddingTop: 'calc(clamp(40px, 8vw, 60px) + 70px)', // Compensar la altura del header sticky
     color: 'white',
   };
 

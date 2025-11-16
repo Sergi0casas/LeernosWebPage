@@ -138,6 +138,7 @@ const CourseDetailsPage = () => {
     justifyContent: 'center',
     color: 'white',
     marginBottom: 'clamp(20px, 5vw, 40px)',
+    marginTop: '70px', // Compensar la altura del header sticky
   };
 
   const heroOverlayStyle = {
