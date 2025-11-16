@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 // Importa los componentes reutilizables (asumiendo que existen)
@@ -7,8 +7,8 @@ import Footer from "../components/Footer";
 import SearchBar from '../components/SearchBar';
 // Ya no necesitamos importar CourseCard porque lo definiremos adentro
 
-// --- DATOS DE EJEMPLO ---
-const popularCourses = [
+// --- DATOS DE EJEMPLO (Cursos predefinidos) ---
+const predefinedCourses = [
   { id: 1, title: 'Análisis de Datos con Python', instructor: 'Dra. Elena Valdés', rating: 4.9, imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&q=80&w=400' },
   { id: 2, title: 'Machine Learning Aplicado', instructor: 'Dr. Marco Solis', rating: 4.8, imageUrl: 'https://images.unsplash.com/photo-1599658880436-c61792e70672?ixlib=rb-4.0.3&q=80&w=400' },
   { id: 3, title: 'Marketing en Redes Sociales', instructor: 'Carlos Ruiz', rating: 4.7, imageUrl: 'https://images.unsplash.com/photo-1554177255-61502b352de3?ixlib=rb-4.0.3&q=80&w=400' },
@@ -181,39 +181,41 @@ const CourseCard = ({ course }) => {
     backgroundColor: 'white',
     borderRadius: '16px',
     border: '1px solid #e0e0e0',
-    width: '300px',
+    minWidth: '280px',
+    maxWidth: '300px',
     overflow: 'hidden',
     boxShadow: '0 4px 10px rgba(0,0,0,0.08)',
     transition: 'transform 0.3s ease, box-shadow 0.3s ease',
     cursor: 'pointer',
+    flexShrink: 0,
   };
   const imageStyle = { width: '100%', height: '150px', objectFit: 'cover' };
-  const infoStyle = { padding: '15px', textAlign: 'left' }; // Aseguramos alineación a la izquierda
-  const titleStyle = { fontSize: '1.2rem', fontWeight: 'bold', margin: '0 0 5px 0', color: '#333' };
-  const instructorStyle = { fontSize: '0.9rem', color: '#666', margin: '0 0 10px 0' };
-  const ratingStyle = { fontWeight: 'bold', color: '#0056d2' };
+  const infoStyle = { padding: '15px', textAlign: 'left' };
+  const titleStyle = { fontSize: 'clamp(1rem, 2vw, 1.2rem)', fontWeight: 'bold', margin: '0 0 5px 0', color: '#333' };
+  const instructorStyle = { fontSize: 'clamp(0.85rem, 1.5vw, 0.9rem)', color: '#666', margin: '0 0 10px 0' };
+  const ratingStyle = { fontWeight: 'bold', color: '#0056d2', fontSize: 'clamp(0.9rem, 1.5vw, 1rem)' };
 
   return (
     <Link to={`/course/${course.id}`} style={{ textDecoration: 'none' }}>
-      <div 
-        style={cardStyle}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'translateY(-8px)';
-          e.currentTarget.style.boxShadow = '0 12px 20px rgba(0,0,0,0.12)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'translateY(0)';
-          e.currentTarget.style.boxShadow = '0 4px 10px rgba(0,0,0,0.08)';
-        }}
-      >
-        <img src={course.imageUrl} alt={course.title} style={imageStyle} />
-        <div style={infoStyle}>
-          {/* --- LÍNEAS CORREGIDAS / AÑADIDAS --- */}
-          <h3 style={titleStyle}>{course.title}</h3>
-          <p style={instructorStyle}>{course.instructor}</p>
-          <span style={ratingStyle}>⭐ {course.rating}</span>
-        </div>
+    <div 
+      style={cardStyle}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = 'translateY(-8px)';
+        e.currentTarget.style.boxShadow = '0 12px 20px rgba(0,0,0,0.12)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.boxShadow = '0 4px 10px rgba(0,0,0,0.08)';
+      }}
+    >
+      <img src={course.imageUrl} alt={course.title} style={imageStyle} />
+      <div style={infoStyle}>
+        {/* --- LÍNEAS CORREGIDAS / AÑADIDAS --- */}
+        <h3 style={titleStyle}>{course.title}</h3>
+        <p style={instructorStyle}>{course.instructor}</p>
+        <span style={ratingStyle}>⭐ {course.rating}</span>
       </div>
+    </div>
     </Link>
   );
 };
@@ -242,7 +244,7 @@ ${tutor.availability}
     backgroundColor: 'white', 
     borderRadius: '16px', 
     border: '1px solid #e0e0e0', 
-    padding: '20px', 
+    padding: 'clamp(15px, 3vw, 20px)', 
     textAlign: 'left', 
     display: 'flex', 
     flexDirection: 'column', 
@@ -251,33 +253,33 @@ ${tutor.availability}
     transition: 'transform 0.3s ease, box-shadow 0.3s ease',
     minHeight: '400px'
   };
-  const headerStyle = { display: 'flex', alignItems: 'center', justifyContent: 'space-between' };
-  const nameStyle = { fontSize: '1.2rem', fontWeight: 'bold', margin: 0 };
-  const avatarStyle = { width: '60px', height: '60px', borderRadius: '50%', objectFit: 'cover' };
-  const statsStyle = { fontSize: '0.8rem', color: '#666' };
-  const bioStyle = { fontSize: '0.9rem', color: '#333', lineHeight: '1.5' };
-  const badgeContainerStyle = { display: 'flex', flexDirection: 'column', gap: '8px', backgroundColor: '#f7f7f7', borderRadius: '8px', padding: '12px' };
-  const badgeStyle = { fontSize: '0.85rem', color: '#555' };
+  const headerStyle = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' };
+  const nameStyle = { fontSize: 'clamp(1rem, 2.5vw, 1.2rem)', fontWeight: 'bold', margin: 0 };
+  const avatarStyle = { width: 'clamp(50px, 10vw, 60px)', height: 'clamp(50px, 10vw, 60px)', borderRadius: '50%', objectFit: 'cover' };
+  const statsStyle = { fontSize: 'clamp(0.75rem, 1.5vw, 0.8rem)', color: '#666' };
+  const bioStyle = { fontSize: 'clamp(0.85rem, 1.8vw, 0.9rem)', color: '#333', lineHeight: '1.5' };
+  const badgeContainerStyle = { display: 'flex', flexDirection: 'column', gap: '8px', backgroundColor: '#f7f7f7', borderRadius: '8px', padding: 'clamp(10px, 2vw, 12px)' };
+  const badgeStyle = { fontSize: 'clamp(0.8rem, 1.5vw, 0.85rem)', color: '#555' };
   const classesContainerStyle = {
     backgroundColor: '#e8f4ff',
     borderRadius: '8px',
-    padding: '12px',
+    padding: 'clamp(10px, 2vw, 12px)',
     border: '1px solid #b3d9ff'
   };
   const classesTitleStyle = { 
-    fontSize: '0.9rem', 
+    fontSize: 'clamp(0.85rem, 1.8vw, 0.9rem)', 
     fontWeight: 'bold', 
     color: '#0056d2', 
     marginBottom: '8px' 
   };
   const classItemStyle = { 
-    fontSize: '0.85rem', 
+    fontSize: 'clamp(0.8rem, 1.5vw, 0.85rem)', 
     color: '#333', 
     marginBottom: '4px',
     paddingLeft: '4px'
   };
   const priceStyle = {
-    fontSize: '1.1rem',
+    fontSize: 'clamp(1rem, 2vw, 1.1rem)',
     fontWeight: 'bold',
     color: '#28a745',
     textAlign: 'center',
@@ -288,9 +290,9 @@ ${tutor.availability}
     color: 'white', 
     border: 'none', 
     borderRadius: '20px', 
-    padding: '12px 0', 
+    padding: 'clamp(10px, 2vw, 12px) 0', 
     width: '100%', 
-    fontSize: '1rem', 
+    fontSize: 'clamp(0.9rem, 1.8vw, 1rem)', 
     fontWeight: 'bold', 
     cursor: 'pointer', 
     marginTop: 'auto',
@@ -357,13 +359,54 @@ ${tutor.availability}
 };
 
 const HomePage = () => {
-  // (Este componente no tiene cambios)
-  const pageStyle = { background: 'linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%)', fontFamily: 'Arial, sans-serif' };
-  const mainContentStyle = { maxWidth: '1200px', margin: '0 auto', padding: '2rem' };
-  const sectionTitleStyle = { fontSize: '2rem', fontWeight: 'bold', color: 'black', marginBottom: '1.5rem', borderBottom: '2px solid #ddd', paddingBottom: '0.5rem' };
-  const courseListStyle = { display: 'flex', gap: '1.5rem', overflowX: 'auto', flexWrap: 'nowrap', padding: '1rem 0' };
+  const [allCourses, setAllCourses] = useState([]);
+
+  // Cargar cursos (predefinidos + creados por profesores)
+  useEffect(() => {
+    const customCourses = JSON.parse(localStorage.getItem('customCourses') || '[]');
+    // Convertir cursos creados al formato de HomePage
+    const formattedCustomCourses = customCourses.map(course => ({
+      id: course.id,
+      title: course.title,
+      instructor: course.instructor,
+      rating: course.rating,
+      imageUrl: course.imageUrl
+    }));
+    // Combinar cursos predefinidos con cursos creados
+    setAllCourses([...predefinedCourses, ...formattedCustomCourses]);
+  }, []);
+
+  const pageStyle = { 
+    background: 'linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%)', 
+    fontFamily: 'Arial, sans-serif' 
+  };
+  const mainContentStyle = { 
+    maxWidth: '1200px', 
+    margin: '0 auto', 
+    padding: 'clamp(1rem, 3vw, 2rem)' 
+  };
+  const sectionTitleStyle = { 
+    fontSize: 'clamp(1.5rem, 4vw, 2rem)', 
+    fontWeight: 'bold', 
+    color: 'black', 
+    marginBottom: '1.5rem', 
+    borderBottom: '2px solid #ddd', 
+    paddingBottom: '0.5rem' 
+  };
+  const courseListStyle = { 
+    display: 'flex', 
+    gap: '1.5rem', 
+    overflowX: 'auto', 
+    flexWrap: 'nowrap', 
+    padding: '1rem 0',
+    paddingBottom: '1.5rem',
+  };
   const tutorSectionStyle = { marginTop: '4rem' };
-  const tutorGridStyle = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '20px' };
+  const tutorGridStyle = { 
+    display: 'grid', 
+    gridTemplateColumns: 'repeat(auto-fit, minmax(min(300px, 100%), 1fr))', 
+    gap: '20px' 
+  };
 
   return (
     <div style={pageStyle}>
@@ -374,8 +417,13 @@ const HomePage = () => {
         <section>
           <h2 style={sectionTitleStyle}>Cursos más Populares</h2>
           <div style={courseListStyle} className="horizontal-scroll">
-            {popularCourses.map(course => ( <CourseCard key={course.id} course={course} /> ))}
+            {allCourses.map(course => ( <CourseCard key={course.id} course={course} /> ))}
           </div>
+          {allCourses.length === 0 && (
+            <p style={{ textAlign: 'center', color: '#666', padding: '2rem' }}>
+              Cargando cursos...
+            </p>
+          )}
         </section>
         <section id="profesores-section" style={tutorSectionStyle}>
           <h2 style={sectionTitleStyle}>Encuentra un tutor</h2>

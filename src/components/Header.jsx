@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -6,10 +6,25 @@ const Header = () => {
   const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+      if (window.innerWidth > 768) {
+        setShowMobileMenu(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleLogout = () => {
     logout();
     navigate('/');
+    setShowMobileMenu(false);
   };
 
   // --- Estilos CSS en formato de objeto JavaScript ---
@@ -18,22 +33,54 @@ const Header = () => {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '1rem 2rem',
+    padding: isMobile ? '1rem' : '1rem 2rem',
     borderBottom: '1px solid #e0e0e0',
     backgroundColor: '#fff',
     colorScheme: 'light',
+    position: 'sticky',
+    top: 0,
+    zIndex: 999,
   };
 
   const logoStyle = {
-    fontSize: '1.8rem',
+    fontSize: isMobile ? '1.5rem' : '1.8rem',
     fontWeight: 'bold',
-    color: '#0047b3', // Un azul oscuro similar al de la imagen
+    color: '#0047b3',
     textDecoration: 'none',
   };
 
   const navStyle = {
-    display: 'flex',
-    gap: '2rem', // Espacio entre los enlaces
+    display: isMobile ? 'none' : 'flex',
+    gap: '2rem',
+  };
+
+  const mobileNavStyle = {
+    display: showMobileMenu ? 'flex' : 'none',
+    flexDirection: 'column',
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    right: 0,
+    backgroundColor: '#fff',
+    borderBottom: '1px solid #e0e0e0',
+    padding: '1rem',
+    gap: '1rem',
+    zIndex: 1001,
+    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+  };
+
+  const hamburgerStyle = {
+    display: isMobile ? 'flex' : 'none',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'none',
+    border: '2px solid #0047b3',
+    borderRadius: '5px',
+    fontSize: '1.5rem',
+    cursor: 'pointer',
+    padding: '0.5rem 0.8rem',
+    color: '#0047b3',
+    transition: 'all 0.3s ease',
   };
 
   const navLinkStyle = {
@@ -47,8 +94,28 @@ const Header = () => {
   };
 
   const actionsStyle = {
+    display: isMobile ? 'none' : 'flex',
+    gap: '1rem',
+  };
+
+  const mobileActionsStyle = {
     display: 'flex',
-    gap: '1rem', // Espacio entre los botones
+    flexDirection: 'column',
+    gap: '0.5rem',
+    marginTop: '1rem',
+    paddingTop: '1rem',
+    borderTop: '1px solid #e0e0e0',
+  };
+
+  const mobileNavLinkStyle = {
+    textDecoration: 'none',
+    color: '#333',
+    fontSize: '1rem',
+    padding: '0.8rem',
+    borderRadius: '5px',
+    transition: 'all 0.3s ease',
+    fontWeight: '500',
+    textAlign: 'center',
   };
 
   const baseButtonStyle = {
@@ -58,6 +125,11 @@ const Header = () => {
     cursor: 'pointer',
     fontWeight: 'bold',
     fontSize: '1rem',
+  };
+
+  const mobileButtonStyle = {
+    ...baseButtonStyle,
+    width: '100%',
   };
 
   const loginButtonStyle = {
@@ -99,7 +171,7 @@ const Header = () => {
     borderRadius: '8px',
     boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
     minWidth: '200px',
-    zIndex: 1000,
+    zIndex: 1002,
     overflow: 'hidden',
   };
 
@@ -131,7 +203,24 @@ const Header = () => {
         <Link to="/" style={logoStyle}>Leernos</Link>
       </div>
 
-      {/* Centro: Navegación */}
+      {/* Botón Hamburguesa para móvil */}
+      <button 
+        style={hamburgerStyle}
+        onClick={() => setShowMobileMenu(!showMobileMenu)}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = '#0047b3';
+          e.currentTarget.style.color = '#fff';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = 'transparent';
+          e.currentTarget.style.color = '#0047b3';
+        }}
+        aria-label="Toggle menu"
+      >
+        {showMobileMenu ? '✕' : '☰'}
+      </button>
+
+      {/* Centro: Navegación Desktop */}
       <nav style={navStyle}>
         <Link 
           to="/" 
@@ -219,6 +308,25 @@ const Header = () => {
             
             {showDropdown && (
               <div style={dropdownStyle}>
+                {user?.role === 'teacher' && (
+                  <Link 
+                    to="/create-course"
+                    style={{
+                      ...dropdownItemStyle,
+                      backgroundColor: '#e8f4ff',
+                      color: '#0056d2',
+                      fontWeight: '600',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#d0e8ff';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#e8f4ff';
+                    }}
+                  >
+                    ✨ Crear Curso
+                  </Link>
+                )}
                 <Link 
                   to={user?.role === 'student' ? '/student-schedule' : '/professor-schedule'}
                   style={dropdownItemStyle}
@@ -262,6 +370,147 @@ const Header = () => {
           </>
         )}
       </div>
+
+      {/* Menú Móvil */}
+      {isMobile && (
+        <nav style={mobileNavStyle}>
+          <Link 
+            to="/" 
+            style={mobileNavLinkStyle}
+            onClick={() => setShowMobileMenu(false)}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#0056d2';
+              e.currentTarget.style.color = '#fff';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.color = '#333';
+            }}
+          >
+            Inicio
+          </Link>
+          <Link 
+            to={isAuthenticated() ? (user?.role === 'teacher' ? '/professor-schedule' : '/student-schedule') : '/login'}
+            style={mobileNavLinkStyle}
+            onClick={() => setShowMobileMenu(false)}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#0056d2';
+              e.currentTarget.style.color = '#fff';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.color = '#333';
+            }}
+          >
+            Mis Cursos
+          </Link>
+          <Link 
+            to="/#profesores" 
+            style={mobileNavLinkStyle}
+            onClick={(e) => {
+              e.preventDefault();
+              setShowMobileMenu(false);
+              const profesoresSection = document.getElementById('profesores-section');
+              if (profesoresSection) {
+                profesoresSection.scrollIntoView({ behavior: 'smooth' });
+              } else {
+                navigate('/');
+                setTimeout(() => {
+                  const section = document.getElementById('profesores-section');
+                  if (section) section.scrollIntoView({ behavior: 'smooth' });
+                }, 300);
+              }
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#0056d2';
+              e.currentTarget.style.color = '#fff';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.color = '#333';
+            }}
+          >
+            Profesores
+          </Link>
+
+          {/* Acciones en móvil */}
+          <div style={mobileActionsStyle}>
+            {isAuthenticated() ? (
+              <>
+                <div style={{ textAlign: 'center', fontWeight: '600', color: '#333', padding: '0.5rem' }}>
+                  👤 {user?.fullName}
+                </div>
+                {user?.role === 'teacher' && (
+                  <Link 
+                    to="/create-course"
+                    style={{
+                      ...mobileNavLinkStyle,
+                      backgroundColor: '#e8f4ff',
+                      color: '#0056d2',
+                      fontWeight: '600',
+                      border: '1px solid #b3d9ff',
+                    }}
+                    onClick={() => setShowMobileMenu(false)}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#d0e8ff';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#e8f4ff';
+                    }}
+                  >
+                    ✨ Crear Curso
+                  </Link>
+                )}
+                <Link 
+                  to={user?.role === 'student' ? '/student-schedule' : '/professor-schedule'}
+                  style={mobileNavLinkStyle}
+                  onClick={() => setShowMobileMenu(false)}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#f5f5f5';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }}
+                >
+                  📅 Mi Horario
+                </Link>
+                <button 
+                  onClick={handleLogout}
+                  style={{
+                    ...mobileNavLinkStyle,
+                    backgroundColor: '#ffebee',
+                    color: '#d32f2f',
+                    fontWeight: '600',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#ffcdd2';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#ffebee';
+                  }}
+                >
+                  🚪 Cerrar Sesión
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" style={{ textDecoration: 'none' }} onClick={() => setShowMobileMenu(false)}>
+                  <button style={{...loginButtonStyle, ...mobileButtonStyle}}>
+                    Iniciar Sesión
+                  </button>
+                </Link>
+                <Link to="/registro" style={{ textDecoration: 'none' }} onClick={() => setShowMobileMenu(false)}>
+                  <button style={{...registerButtonStyle, ...mobileButtonStyle}}>
+                    Registrarse
+                  </button>
+                </Link>
+              </>
+            )}
+          </div>
+        </nav>
+      )}
     </header>
   );
 };

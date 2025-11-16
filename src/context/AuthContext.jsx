@@ -14,11 +14,16 @@ export const useAuth = () => {
 
 // Proveedor del contexto
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  // Intentar recuperar el usuario desde localStorage al iniciar
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('currentUser');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
 
   // Función para registrar un usuario
   const register = (userData) => {
     const newUser = {
+      id: Date.now(), // Generar un ID único basado en timestamp
       fullName: userData.fullName,
       email: userData.email,
       role: userData.role, // 'student' o 'teacher'
@@ -27,6 +32,8 @@ export const AuthProvider = ({ children }) => {
       timePeriod: userData.timePeriod || null,
     };
     setUser(newUser);
+    // Guardar en localStorage para persistencia
+    localStorage.setItem('currentUser', JSON.stringify(newUser));
     // En una app real, aquí harías la petición al backend
     console.log('Usuario registrado:', newUser);
   };
@@ -46,6 +53,7 @@ export const AuthProvider = ({ children }) => {
   // Función para cerrar sesión
   const logout = () => {
     setUser(null);
+    localStorage.removeItem('currentUser');
     console.log('Usuario deslogueado');
   };
 

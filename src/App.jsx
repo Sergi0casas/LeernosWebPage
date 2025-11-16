@@ -12,6 +12,7 @@ import ProfessorSchedule from './pages/ProfessorSchedule';
 import CourseDetailsPage from './pages/CourseDetailsPage';
 import RegistrationPage from './pages/RegistrationPage';
 import ForgotPassword from './pages/ForgotPassword';
+import CreateCourse from './pages/CreateCourse';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         
         {/* Rutas de cursos */}
         <Route path="/course/:id" element={<CourseDetailsPage />} />
+        <Route path="/create-course" element={<CreateCourse />} />
         
         {/* Rutas de horarios */}
         <Route path="/student-schedule" element={<StudentSchedule />} />

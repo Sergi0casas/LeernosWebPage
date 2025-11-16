@@ -91,7 +91,15 @@ const StarRating = ({ rating }) => {
 const CourseDetailsPage = () => {
   // Obtiene el ID del curso desde la URL
   const { id } = useParams();
-  const courseData = coursesDatabase[id];
+  
+  // Buscar primero en la base de datos predefinida
+  let courseData = coursesDatabase[id];
+  
+  // Si no existe, buscar en cursos creados por profesores
+  if (!courseData) {
+    const customCourses = JSON.parse(localStorage.getItem('customCourses') || '[]');
+    courseData = customCourses.find(course => course.id == id);
+  }
   
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
@@ -121,7 +129,7 @@ const CourseDetailsPage = () => {
 
   const heroStyle = {
     position: 'relative',
-    height: '400px',
+    height: 'clamp(250px, 50vw, 400px)',
     backgroundImage: `url(${courseData.imageUrl})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
@@ -129,7 +137,7 @@ const CourseDetailsPage = () => {
     alignItems: 'center',
     justifyContent: 'center',
     color: 'white',
-    marginBottom: '40px',
+    marginBottom: 'clamp(20px, 5vw, 40px)',
   };
 
   const heroOverlayStyle = {
@@ -147,27 +155,27 @@ const CourseDetailsPage = () => {
     zIndex: 1,
     textAlign: 'center',
     maxWidth: '800px',
-    padding: '20px',
+    padding: 'clamp(15px, 3vw, 20px)',
   };
 
-  const contentWrapperStyle = { position: 'relative', zIndex: 1, padding: '0 20px 60px', maxWidth: '1200px', margin: '0 auto' };
+  const contentWrapperStyle = { position: 'relative', zIndex: 1, padding: '0 clamp(15px, 3vw, 20px) clamp(40px, 8vw, 60px)', maxWidth: '1200px', margin: '0 auto' };
   
   const courseInfoStyle = {
     backgroundColor: '#fff',
     borderRadius: '15px',
-    padding: '30px',
-    marginBottom: '40px',
+    padding: 'clamp(20px, 4vw, 30px)',
+    marginBottom: 'clamp(25px, 5vw, 40px)',
     boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
   };
 
-  const courseTitleStyle = { fontSize: '3.5rem', fontWeight: 'bold', margin: '0 0 20px 0', textShadow: '2px 2px 4px rgba(0,0,0,0.3)' };
-  const subtitleStyle = { fontSize: '1.4rem', marginTop: '10px', opacity: 0.95 };
+  const courseTitleStyle = { fontSize: 'clamp(2rem, 6vw, 3.5rem)', fontWeight: 'bold', margin: '0 0 20px 0', textShadow: '2px 2px 4px rgba(0,0,0,0.3)' };
+  const subtitleStyle = { fontSize: 'clamp(1rem, 3vw, 1.4rem)', marginTop: '10px', opacity: 0.95 };
   
   const statsContainerStyle = {
     display: 'flex',
-    gap: '30px',
+    gap: 'clamp(15px, 4vw, 30px)',
     justifyContent: 'center',
-    marginTop: '30px',
+    marginTop: 'clamp(20px, 4vw, 30px)',
     flexWrap: 'wrap',
   };
 
@@ -175,53 +183,54 @@ const CourseDetailsPage = () => {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: '15px 25px',
+    padding: 'clamp(12px, 2vw, 15px) clamp(15px, 3vw, 25px)',
     backgroundColor: 'rgba(255,255,255,0.2)',
     borderRadius: '10px',
     backdropFilter: 'blur(5px)',
   };
 
-  const statValueStyle = { fontSize: '1.8rem', fontWeight: 'bold' };
-  const statLabelStyle = { fontSize: '0.9rem', marginTop: '5px', opacity: 0.9 };
+  const statValueStyle = { fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', fontWeight: 'bold' };
+  const statLabelStyle = { fontSize: 'clamp(0.8rem, 1.5vw, 0.9rem)', marginTop: '5px', opacity: 0.9 };
 
   const sectionTitleStyle = {
-    fontSize: '2rem',
+    fontSize: 'clamp(1.5rem, 4vw, 2rem)',
     fontWeight: 'bold',
     color: '#333',
-    marginBottom: '20px',
+    marginBottom: 'clamp(15px, 3vw, 20px)',
     borderLeft: '5px solid #0056d2',
-    paddingLeft: '15px',
+    paddingLeft: 'clamp(10px, 2vw, 15px)',
   };
 
   const topicsGridStyle = {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-    gap: '15px',
-    marginBottom: '30px',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(min(150px, 100%), 1fr))',
+    gap: 'clamp(10px, 2vw, 15px)',
+    marginBottom: 'clamp(20px, 4vw, 30px)',
   };
 
   const topicItemStyle = {
-    padding: '15px',
+    padding: 'clamp(12px, 2vw, 15px)',
     backgroundColor: '#f0f4ff',
     borderRadius: '8px',
     textAlign: 'center',
     fontWeight: '500',
     color: '#0056d2',
     border: '1px solid #d0e0ff',
+    fontSize: 'clamp(0.85rem, 1.5vw, 1rem)',
   };
-  const professorListStyle = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '25px', marginTop: '40px' };
-  const professorCardStyle = { backgroundColor: '#fff', borderRadius: '15px', boxShadow: '0 8px 25px rgba(0, 0, 0, 0.12)', padding: '30px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', transition: 'transform 0.3s ease, box-shadow 0.3s ease' };
+  const professorListStyle = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(280px, 100%), 1fr))', gap: 'clamp(15px, 3vw, 25px)', marginTop: 'clamp(25px, 5vw, 40px)' };
+  const professorCardStyle = { backgroundColor: '#fff', borderRadius: '15px', boxShadow: '0 8px 25px rgba(0, 0, 0, 0.12)', padding: 'clamp(20px, 4vw, 30px)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', transition: 'transform 0.3s ease, box-shadow 0.3s ease' };
   const professorCardHoverStyle = (e) => { e.currentTarget.style.transform = 'translateY(-8px)'; e.currentTarget.style.boxShadow = '0 12px 30px rgba(0, 0, 0, 0.2)'; };
   const professorCardLeaveStyle = (e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.12)'; };
-  const avatarStyle = { width: '120px', height: '120px', borderRadius: '50%', objectFit: 'cover', border: '4px solid #0056d2', marginBottom: '20px' };
-  const nameStyle = { fontSize: '1.8rem', fontWeight: 'bold', color: '#333', margin: '0 0 5px 0' };
-  const universityStyle = { fontSize: '1rem', color: '#777', margin: '0 0 10px 0' };
-  const experienceStyle = { fontSize: '1rem', color: '#777', margin: '0 0 15px 0' };
-  const priceStyle = { fontSize: '1.5rem', fontWeight: 'bold', color: '#0056d2', margin: '15px 0 20px 0' };
+  const avatarStyle = { width: 'clamp(80px, 15vw, 120px)', height: 'clamp(80px, 15vw, 120px)', borderRadius: '50%', objectFit: 'cover', border: '4px solid #0056d2', marginBottom: 'clamp(15px, 3vw, 20px)' };
+  const nameStyle = { fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', fontWeight: 'bold', color: '#333', margin: '0 0 5px 0' };
+  const universityStyle = { fontSize: 'clamp(0.9rem, 1.8vw, 1rem)', color: '#777', margin: '0 0 10px 0' };
+  const experienceStyle = { fontSize: 'clamp(0.9rem, 1.8vw, 1rem)', color: '#777', margin: '0 0 15px 0' };
+  const priceStyle = { fontSize: 'clamp(1.2rem, 2.5vw, 1.5rem)', fontWeight: 'bold', color: '#0056d2', margin: '15px 0 20px 0' };
   const recognitionsContainerStyle = { marginTop: '15px', borderTop: '1px solid #f0f0f0', paddingTop: '15px', width: '100%', textAlign: 'left' };
-  const recognitionsTitleStyle = { fontSize: '1rem', fontWeight: 'bold', color: '#333', margin: '0 0 10px 0' };
-  const recognitionItemStyle = { listStyleType: "'🏆'", paddingLeft: '10px', marginLeft: '20px', color: '#555', marginBottom: '5px' };
-  const scheduleButtonStyle = { backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '8px', padding: '12px 25px', fontSize: '1rem', fontWeight: 'bold', cursor: 'pointer', marginTop: '25px', transition: 'background-color 0.3s ease, transform 0.2s ease' };
+  const recognitionsTitleStyle = { fontSize: 'clamp(0.9rem, 1.8vw, 1rem)', fontWeight: 'bold', color: '#333', margin: '0 0 10px 0' };
+  const recognitionItemStyle = { listStyleType: "'🏆'", paddingLeft: '10px', marginLeft: '20px', color: '#555', marginBottom: '5px', fontSize: 'clamp(0.85rem, 1.5vw, 0.9rem)' };
+  const scheduleButtonStyle = { backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '8px', padding: 'clamp(10px, 2vw, 12px) clamp(20px, 4vw, 25px)', fontSize: 'clamp(0.9rem, 1.8vw, 1rem)', fontWeight: 'bold', cursor: 'pointer', marginTop: 'clamp(20px, 4vw, 25px)', transition: 'background-color 0.3s ease, transform 0.2s ease' };
 
   return (
     <div style={pageStyle} data-color-scheme="light">

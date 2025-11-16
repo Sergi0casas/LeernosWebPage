@@ -43,3 +43,37 @@ h1 {
 [data-color-scheme="light"] * {
   color-scheme: light;
 }
+
+/* --- ESTILOS RESPONSIVE GLOBALES --- */
+
+/* Asegurar que las imágenes sean responsive */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Ajustar el viewport para móvil */
+@media (max-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+  
+  body {
+    overflow-x: hidden;
+  }
+}
+
+/* Ocultar scrollbar horizontal en móvil */
+@media (max-width: 768px) {
+  body::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+}
+
+/* Mejorar el espaciado en móvil */
+@media (max-width: 768px) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}

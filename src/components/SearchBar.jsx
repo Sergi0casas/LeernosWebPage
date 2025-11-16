@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// Base de datos de cursos disponibles (sincronizada con HomePage)
-const availableCourses = [
+// Base de datos de cursos predefinidos
+const predefinedCourses = [
   { id: 1, title: 'Análisis de Datos con Python', instructor: 'Dra. Elena Valdés', rating: 4.9, keywords: ['python', 'datos', 'análisis', 'estadística', 'data science', 'pandas', 'numpy'] },
   { id: 2, title: 'Machine Learning Aplicado', instructor: 'Dr. Marco Solis', rating: 4.8, keywords: ['machine learning', 'ml', 'inteligencia artificial', 'ia', 'algoritmos', 'redes neuronales'] },
   { id: 3, title: 'Marketing en Redes Sociales', instructor: 'Carlos Ruiz', rating: 4.7, keywords: ['marketing', 'redes sociales', 'facebook', 'instagram', 'social media', 'publicidad'] },
@@ -13,7 +13,23 @@ const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
+  const [allCourses, setAllCourses] = useState(predefinedCourses);
   const navigate = useNavigate();
+
+  // Cargar cursos (predefinidos + creados por profesores)
+  useEffect(() => {
+    const customCourses = JSON.parse(localStorage.getItem('customCourses') || '[]');
+    // Convertir cursos creados al formato de búsqueda
+    const formattedCustomCourses = customCourses.map(course => ({
+      id: course.id,
+      title: course.title,
+      instructor: course.instructor,
+      rating: course.rating,
+      keywords: course.topics || [] // Los topics se convierten en keywords
+    }));
+    // Combinar cursos predefinidos con cursos creados
+    setAllCourses([...predefinedCourses, ...formattedCustomCourses]);
+  }, []);
 
   // Función para buscar cursos
   const handleSearch = (value) => {
@@ -26,12 +42,14 @@ const SearchBar = () => {
     }
 
     const searchLower = value.toLowerCase();
-    const results = availableCourses.filter(course => {
+    const results = allCourses.filter(course => {
       // Buscar en título, instructor y keywords
       return (
         course.title.toLowerCase().includes(searchLower) ||
         course.instructor.toLowerCase().includes(searchLower) ||
-        course.keywords.some(keyword => keyword.includes(searchLower))
+        (course.keywords && course.keywords.some(keyword => 
+          typeof keyword === 'string' && keyword.toLowerCase().includes(searchLower)
+        ))
       );
     });
 
@@ -61,16 +79,17 @@ const SearchBar = () => {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '4rem 2rem',
-    backgroundColor: '#f8f9fa', // Un fondo gris muy claro
+    padding: '2rem 1rem',
+    backgroundColor: '#f8f9fa',
     colorScheme: 'light',
   };
 
   const titleStyle = {
-    fontSize: '2.5rem',
+    fontSize: 'clamp(1.5rem, 5vw, 2.5rem)',
     fontWeight: 'bold',
-    color: '#212529', // Negro suave
+    color: '#212529',
     marginBottom: '1.5rem',
+    textAlign: 'center',
   };
 
   const formStyle = {
@@ -82,13 +101,13 @@ const SearchBar = () => {
   };
 
   const inputStyle = {
-    flexGrow: 1, // El input ocupa todo el espacio posible
+    flexGrow: 1,
     border: '1px solid #ced4da',
-    padding: '1rem 1rem 1rem 3rem', // Padding izquierdo para el ícono
-    fontSize: '1rem',
+    padding: '0.8rem 0.5rem 0.8rem 2.5rem',
+    fontSize: 'clamp(0.875rem, 2vw, 1rem)',
     borderTopLeftRadius: '8px',
     borderBottomLeftRadius: '8px',
-    borderRight: 'none', // Quitamos el borde derecho para unirlo al botón
+    borderRight: 'none',
     backgroundColor: '#ffffff',
     color: '#212529',
   };
@@ -108,14 +127,14 @@ const SearchBar = () => {
   };
 
   const buttonStyle = {
-    padding: '1rem 1.5rem',
+    padding: '0.8rem 1rem',
     border: 'none',
-    backgroundColor: '#0056d2', // Azul primario
+    backgroundColor: '#0056d2',
     color: 'white',
     borderTopRightRadius: '8px',
     borderBottomRightRadius: '8px',
     cursor: 'pointer',
-    fontSize: '1.2rem', // Hacemos el ícono del botón un poco más grande
+    fontSize: '1rem',
     transition: 'background-color 0.3s ease',
   };
 

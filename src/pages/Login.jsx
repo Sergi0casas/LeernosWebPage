@@ -12,23 +12,24 @@ const Login = () => {
     alert('Intento de login con: ' + email + ' y ' + password);
   };
 
-  // --- 1. FONDO COPIADO DE ForgotPassword.jsx ---
+  // --- Estilos Responsive ---
   const backgroundStyle = {
     backgroundColor: '#000000',
     backgroundImage: 'radial-gradient(circle at 70% 50%, rgba(0, 86, 210, 0.15) 0%, transparent 50%)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    height: '100vh',
+    minHeight: '100vh',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     fontFamily: 'Arial, sans-serif',
     overflow: 'hidden',
+    padding: '20px',
   };
 
   const formContainerStyle = {
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    padding: '40px',
+    padding: 'clamp(25px, 5vw, 40px)',
     borderRadius: '15px',
     boxShadow: '0 8px 30px rgba(0, 0, 0, 0.5)',
     textAlign: 'center',
@@ -40,33 +41,33 @@ const Login = () => {
     border: '1px solid rgba(255, 255, 255, 0.1)',
   };
   
-  const logoStyle = { fontFamily: 'Pacifico, cursive', fontSize: '3rem', color: '#E0E0E0', marginBottom: '15px' };
-  const subtitleStyle = { fontSize: '1rem', color: '#B0B0B0', marginBottom: '30px' };
-  const inputStyle = { width: 'calc(100% - 20px)', padding: '12px 10px', margin: '10px 0', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '8px', fontSize: '1rem', boxSizing: 'border-box', backgroundColor: 'rgba(255, 255, 255, 0.1)', color: '#E0E0E0' };
+  const logoStyle = { fontFamily: 'Pacifico, cursive', fontSize: 'clamp(2.5rem, 7vw, 3rem)', color: '#E0E0E0', marginBottom: '15px' };
+  const subtitleStyle = { fontSize: 'clamp(0.9rem, 2vw, 1rem)', color: '#B0B0B0', marginBottom: 'clamp(25px, 5vw, 30px)' };
+  const inputStyle = { width: '100%', padding: 'clamp(10px, 2vw, 12px)', margin: '10px 0', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '8px', fontSize: 'clamp(0.9rem, 1.8vw, 1rem)', boxSizing: 'border-box', backgroundColor: 'rgba(255, 255, 255, 0.1)', color: '#E0E0E0' };
   
   // --- 2. COLORES AJUSTADOS PARA CONSISTENCIA ---
   const buttonStyle = {
     width: '100%',
-    padding: '15px',
-    backgroundColor: '#0056d2', // Color azul principal
+    padding: 'clamp(12px, 2.5vw, 15px)',
+    backgroundColor: '#0056d2',
     color: 'white',
     border: 'none',
     borderRadius: '8px',
-    fontSize: '1.1rem',
+    fontSize: 'clamp(1rem, 2vw, 1.1rem)',
     cursor: 'pointer',
     marginTop: '20px',
     transition: 'background-color 0.3s ease',
   };
 
   const buttonHoverStyle = {
-    backgroundColor: '#0040a0', // Azul más oscuro
+    backgroundColor: '#0040a0',
   };
 
   const forgotPasswordLinkStyle = { 
     display: 'block', 
     marginTop: '20px', 
-    fontSize: '0.9rem', 
-    color: '#00aaff', // Azul claro para el enlace
+    fontSize: 'clamp(0.85rem, 1.8vw, 0.9rem)', 
+    color: '#00aaff',
     textDecoration: 'none',
   };
 

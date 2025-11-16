@@ -106,14 +106,14 @@ const StudentSchedule = () => {
   };
 
   const subjectStyle = {
-    fontSize: '1.4rem',
+    fontSize: 'clamp(1.1rem, 2.5vw, 1.4rem)',
     fontWeight: 'bold',
     color: '#0056d2',
     margin: '0 0 5px 0',
   };
 
   const professorStyle = {
-    fontSize: '1rem',
+    fontSize: 'clamp(0.9rem, 1.8vw, 1rem)',
     color: '#555',
     margin: '0 0 15px 0',
   };
@@ -121,23 +121,25 @@ const StudentSchedule = () => {
   const timeInfoStyle = {
     display: 'flex',
     alignItems: 'center',
-    gap: '15px',
+    gap: 'clamp(10px, 2vw, 15px)',
     color: '#777',
-    fontSize: '0.9rem',
+    fontSize: 'clamp(0.85rem, 1.5vw, 0.9rem)',
+    flexWrap: 'wrap',
   };
 
   const joinButtonStyle = {
-    backgroundColor: '#2d8cff', // Un azul brillante para el botón de Zoom
+    backgroundColor: '#2d8cff',
     color: 'white',
-    padding: '12px 25px',
+    padding: 'clamp(10px, 2vw, 12px) clamp(20px, 3vw, 25px)',
     borderRadius: '8px',
     textDecoration: 'none',
     fontWeight: 'bold',
-    fontSize: '1rem',
+    fontSize: 'clamp(0.9rem, 1.8vw, 1rem)',
     display: 'inline-flex',
     alignItems: 'center',
     gap: '8px',
     transition: 'background-color 0.3s ease',
+    whiteSpace: 'nowrap',
   };
 
   return (

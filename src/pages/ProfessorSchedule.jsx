@@ -32,6 +32,7 @@ const professorClasses = [
 const ProfessorSchedule = () => {
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const [myCourses, setMyCourses] = React.useState([]);
 
   // Redirigir si no está autenticado
   React.useEffect(() => {
@@ -40,6 +41,15 @@ const ProfessorSchedule = () => {
       navigate('/login');
     }
   }, [isAuthenticated, navigate]);
+
+  // Cargar los cursos creados por este profesor
+  React.useEffect(() => {
+    if (user && user.id) {
+      const customCourses = JSON.parse(localStorage.getItem('customCourses') || '[]');
+      const professorCourses = customCourses.filter(course => course.professorId === user.id);
+      setMyCourses(professorCourses);
+    }
+  }, [user]);
 
   // Si no hay usuario, no renderizar nada (mientras redirige)
   if (!user) {
@@ -185,6 +195,164 @@ const ProfessorSchedule = () => {
         {professorClasses.length === 0 && (
             <p style={{textAlign: 'center', color: '#777'}}>No tienes clases programadas.</p>
         )}
+        </div>
+
+        {/* SECCIÓN MIS CURSOS CREADOS */}
+        <div style={{ marginTop: '60px', maxWidth: '900px', margin: '60px auto 0' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
+            <h2 style={{ fontSize: '2rem', color: '#333', fontWeight: 'bold', margin: 0 }}>
+              📚 Mis Cursos Creados
+            </h2>
+            <button
+              onClick={() => navigate('/create-course')}
+              style={{
+                backgroundColor: '#0056d2',
+                color: 'white',
+                padding: '12px 24px',
+                borderRadius: '8px',
+                border: 'none',
+                fontSize: '1rem',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                transition: 'background-color 0.3s ease',
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0040a0'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0056d2'}
+            >
+              ✨ Crear Nuevo Curso
+            </button>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px', marginBottom: '40px' }}>
+            {myCourses.map(course => (
+              <div
+                key={course.id}
+                style={{
+                  backgroundColor: '#fff',
+                  borderRadius: '12px',
+                  overflow: 'hidden',
+                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.08)',
+                  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-5px)';
+                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.08)';
+                }}
+                onClick={() => navigate(`/course/${course.id}`)}
+              >
+                <img
+                  src={course.imageUrl}
+                  alt={course.title}
+                  style={{
+                    width: '100%',
+                    height: '160px',
+                    objectFit: 'cover',
+                  }}
+                />
+                <div style={{ padding: '20px' }}>
+                  <h3 style={{
+                    fontSize: '1.2rem',
+                    fontWeight: 'bold',
+                    color: '#333',
+                    margin: '0 0 10px 0',
+                    lineHeight: '1.4',
+                  }}>
+                    {course.title}
+                  </h3>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                    <span style={{ color: '#666', fontSize: '0.9rem' }}>
+                      ⏰ {course.duration}
+                    </span>
+                    <span style={{ 
+                      backgroundColor: course.level === 'Principiante' ? '#e8f4ff' : course.level === 'Intermedio' ? '#fff3e0' : '#ffe0e0',
+                      color: course.level === 'Principiante' ? '#0056d2' : course.level === 'Intermedio' ? '#f57c00' : '#d32f2f',
+                      padding: '4px 12px',
+                      borderRadius: '12px',
+                      fontSize: '0.8rem',
+                      fontWeight: '600',
+                    }}>
+                      {course.level}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px', paddingTop: '12px', borderTop: '1px solid #eee' }}>
+                    <span style={{ color: '#999', fontSize: '0.85rem' }}>
+                      👥 {course.students} estudiantes
+                    </span>
+                    <span style={{ color: '#ffc107', fontSize: '0.9rem', fontWeight: 'bold' }}>
+                      ⭐ {course.rating.toFixed(1)}
+                    </span>
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/course/${course.id}`);
+                    }}
+                    style={{
+                      width: '100%',
+                      marginTop: '15px',
+                      padding: '10px',
+                      backgroundColor: '#f0f4ff',
+                      color: '#0056d2',
+                      border: '1px solid #b3d9ff',
+                      borderRadius: '6px',
+                      fontSize: '0.9rem',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      transition: 'background-color 0.3s ease',
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d0e8ff'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#f0f4ff'}
+                  >
+                    Ver Detalles
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {myCourses.length === 0 && (
+            <div style={{
+              textAlign: 'center',
+              padding: '60px 20px',
+              backgroundColor: '#fff',
+              borderRadius: '12px',
+              border: '2px dashed #ddd',
+            }}>
+              <p style={{ fontSize: '3rem', margin: '0 0 20px 0' }}>📚</p>
+              <h3 style={{ fontSize: '1.5rem', color: '#333', margin: '0 0 10px 0' }}>
+                Aún no has creado ningún curso
+              </h3>
+              <p style={{ color: '#777', marginBottom: '20px' }}>
+                Comienza a compartir tu conocimiento creando tu primer curso
+              </p>
+              <button
+                onClick={() => navigate('/create-course')}
+                style={{
+                  backgroundColor: '#0056d2',
+                  color: 'white',
+                  padding: '12px 30px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  fontSize: '1rem',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.3s ease',
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0040a0'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0056d2'}
+              >
+                ✨ Crear Mi Primer Curso
+              </button>
+            </div>
+          )}
         </div>
       </div>
       <Footer />
